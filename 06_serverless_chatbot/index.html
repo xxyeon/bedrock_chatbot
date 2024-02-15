@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>stlite app</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@stlite/mountable@0.39.0/build/stlite.css" />
+</head>
+
+<body>
+    <div id="root"></div>
+    <script src="https://cdn.jsdelivr.net/npm/@stlite/mountable@0.39.0/build/stlite.js"></script>
+    <script>
+        stlite.mount(
+            `
+import streamlit as st
+import requests
+import json
+
+ENDPOINT_LAMBDA_URL = "YOUR LAMBDA FUNCTION URL"
+
+st.title("Chatbot powered by Bedrock")
+
+if "messages" not in st.session_state:
+    st.session_state.messages = []
+
+for message in st.session_state.messages:
+    with st.chat_message(message["role"]):
+        st.markdown(message["content"])
+
+if prompt := st.chat_input("Message Bedrock..."):
+    with st.chat_message("user"):
+        st.markdown(prompt)
+    st.session_state.messages.append({"role": "user", "content": prompt})
+
+    with st.chat_message("assistant"):
+        # buffered
+        with st.spinner("Thinking..."):
+            response_raw = requests.post(ENDPOINT_LAMBDA_URL, json={"prompt": prompt})
+            print(f"raw: {response_raw}")
+            response_json = response_raw.json()
+            print(f"json: {response_json}")
+            model_output = response_json.get("output")
+            print(model_output)
+
+        st.write(model_output)
+
+    st.session_state.messages.append({"role": "assistant", "content": model_output})
+
+`,
+            document.getElementById("root")
+        );
+    </script>
+</body>
+
+</html>

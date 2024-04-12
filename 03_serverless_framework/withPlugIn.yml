@@ -1,4 +1,4 @@
-service: ml-kmu-<<YOUR_NUMBER>>-lambda-bedrock-api
+service: smwu-aiml-<<YOUR_NUMBER>>-bedrock-function
 frameworkVersion: "3"
 
 plugins:

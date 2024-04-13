@@ -17,6 +17,4 @@ functions:
     # lambda_handler: lambda 핸들러 이름
     timeout: 900 # 초 단위로 입력. 최대 900초(15분)
     memorySize: 128
-    url:
-      authorizer: none
-      invokeMode: RESPONSE_STREAM
+    url: true

@@ -1,23 +1,19 @@
-service: ml-kmu-<<YOUR_NUMBER>>-lambda-bedrock-api
+service: smwu-aiml-<<YOUR_NUMBER>>-bedrock-function-sls
 frameworkVersion: "3"
-
-plugins:
-  - serverless-python-requirements
-custom:
-  pythonRequirements:
-    dockerizePip: true
 
 provider:
   name: aws
-  runtime: python3.10
+  runtime: nodejs20.x
   region: ap-northeast-2
   iam:
     role:
-      managedPolicies: "arn:aws:iam::aws:policy/AmazonBedrockFullAccess"
+      managedPolicies:
+        - "arn:aws:iam::907729080149:policy/Bedrock_Mini"
 
 functions:
   invokeBedrockRuntime:
-    handler: app.lambda_handler
+    handler: app.handler
     timeout: 900
     memorySize: 128
-    url: true
+    url:
+      invokeMode: RESPONSE_STREAM

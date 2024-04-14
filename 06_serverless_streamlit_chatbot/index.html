@@ -1,6 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>stlite app</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@stlite/mountable@0.39.0/build/stlite.css"
+    />
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script src="https://cdn.jsdelivr.net/npm/@stlite/mountable@0.39.0/build/stlite.js"></script>
+    <script>
+      stlite.mount(
+        `
 import json  # JSON 파싱
-import random  # Stream response 테스트용
-import time  # Stream response 테스트용
 
 import requests  # HTTP 요청 생성을 위한 requests 라이브러리 임포트
 import streamlit as st  # Streamlit 라이브러리 임포트하여 웹 앱 생성
@@ -30,21 +50,6 @@ def get_streaming_response(prompt):
             print(text)
             yield text
 
-
-# Stream response 테스트용
-def response_generator():
-    response = random.choice(
-        [
-            "Hello there! How can I assist you today?",
-            "Hi, human! Is there anything I can help you with?",
-            "Do you need help?",
-        ]
-    )
-    for word in response.split():
-        yield word + " "
-        time.sleep(0.05)
-
-
 # 사용자로부터 입력 받음
 if prompt := st.chat_input("Message Bedrock..."):
     # 사용자 메시지 세션 상태에 추가
@@ -58,3 +63,10 @@ if prompt := st.chat_input("Message Bedrock..."):
 
     # 보조 응답 세션 상태에 추가
     st.session_state.messages.append({"role": "assistant", "content": model_output})
+
+`,
+        document.getElementById("root")
+      );
+    </script>
+  </body>
+</html>

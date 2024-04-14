@@ -1,7 +1,7 @@
 import axios from "axios";
 
-const API_ENDPOINT = "YOUR LAMBDA FUNTION URL";
-const body = { prompt: "대한민국의 수도에 대해 2문장으로 설명해" };
+const API_ENDPOINT = "YOUR LAMBDA FUNCTION";
+const body = { prompt: "대한민국의 수도에 대해 node설명해" };
 
 async function postData() {
   try {
@@ -11,11 +11,11 @@ async function postData() {
 
     response.data.on("data", (chunk) => {
       // logic to process stream data
-      console.log(response.data);
+      process.stdout.write(chunk.toString());
     });
 
     response.data.on("end", () => {
-      // logic for stream complete
+      console.log("\n\n");
       console.log("Job Done!");
     });
   } catch (error) {

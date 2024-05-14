@@ -84,10 +84,10 @@ def generate_image(prompt):
 def main():
     # 이미지 생성을 위한 텍스트 프롬프트 설정
     prompt = [
-        "Golden Retriever",
-        "Golden Retriever as a cartoon",
-        "Golden Retriever as a sketch",
-        "Golden Retriever scuba diving in the deep sea wearing a mask and flippers",
+        "A Golden Retriever",
+        "A Golden Retriever as a cartoon",
+        "A Golden Retriever as a sketch",
+        "A Golden Retriever scuba diving in the deep sea wearing a mask and flippers",
     ]
     # 이미지를 생성하고 저장
     image_path = generate_image(prompt[0])

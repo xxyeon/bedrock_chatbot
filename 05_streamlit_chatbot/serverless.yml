@@ -8,7 +8,7 @@ provider:
   iam:
     role:
       managedPolicies:
-        - "arn:aws:iam::907729080149:policy/Bedrock_Mini"
+        - "arn:aws:iam::aws:policy/AmazonBedrockFullAccess"
 
 functions:
   invokeBedrockRuntime:

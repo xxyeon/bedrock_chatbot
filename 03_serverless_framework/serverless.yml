@@ -7,8 +7,7 @@ provider:
   iam:
     role:
       managedPolicies:
-        # - "arn:aws:iam::aws:policy/AmazonBedrockFullAccess"
-        - "arn:aws:iam::907729080149:policy/Bedrock_Mini" # IAM Console에서 확인 가능
+        - "arn:aws:iam::aws:policy/AmazonBedrockFullAccess"
 
 functions:
   invokeBedrockRuntime:

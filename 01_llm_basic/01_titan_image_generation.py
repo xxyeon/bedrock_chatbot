@@ -94,9 +94,9 @@ def main():
     print(f"생성된 이미지 경로: {image_path}")
 
     # output_folder = 'images'
-    # target_image = 'Golden Retriever'
+    # target_image = 'A Golden Retriever'
     # file_path = os.path.join(output_folder, f"{target_image}.png")
-    # image_path = edit_image(file_path, "Golden Retriever in a play ground")
+    # image_path = edit_image(file_path, "A Golden Retriever in a play ground")
     # print(f"수정된 이미지 경로: {image_path}")
 
 

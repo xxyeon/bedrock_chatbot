@@ -1,5 +1,5 @@
 service: smwu-aiml-<<YOUR_NUMBER>>-bedrock-function-sls
-frameworkVersion: "3"
+frameworkVersion: "4"
 
 provider:
   name: aws

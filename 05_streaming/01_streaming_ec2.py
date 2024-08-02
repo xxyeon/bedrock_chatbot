@@ -67,7 +67,7 @@ def get_streaming_response(prompt, streaming_callback):
                 chunk = event.get("chunk")
                 if chunk:
                     chunk_json = json.loads(chunk.get("bytes").decode())
-                    dstreaming_callback(chunk_json)
+                    streaming_callback(chunk_json)
     except Exception as e:
         print(e)
 

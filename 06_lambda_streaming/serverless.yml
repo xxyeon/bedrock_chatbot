@@ -1,4 +1,4 @@
-service: smwu-aiml-<<YOUR_NUMBER>>-bedrock-function-sls
+service: <<COURSE_CODE>>-<<YOUR_NUMBER>>-bedrock-function-sls
 frameworkVersion: "4"
 
 provider:

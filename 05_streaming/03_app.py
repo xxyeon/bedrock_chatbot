@@ -1,21 +1,32 @@
-import json
-
+import json  # JSON 파싱
 import boto3
+import streamlit as st
 
-# Bedrock runtime
 bedrock_runtime = boto3.client(service_name="bedrock-runtime", region_name="us-east-1")
+
+# 웹 앱 제목 설정
+st.title("Chatbot powered by Bedrock")
+
+# 세션 상태에 메시지 없으면 초기화
+if "messages" not in st.session_state:
+    st.session_state.messages = []
+
+# 세션 상태에 저장된 메시지 순회하며 표시
+for message in st.session_state.messages:
+    with st.chat_message(message["role"]):  # 채팅 메시지 버블 생성
+        st.markdown(message["content"])  # 메시지 내용 마크다운으로 렌더링
 
 
 def chunk_handler(chunk):
     #  API가 서로 다른 타입을 리턴
     # print(f"\n\n!!!\n{chunk}")
-    text = None
+    text = ""
     chunk_type = chunk.get("type")
     # print(f"\n\nchunk type: {chunk_type}")
     if chunk_type == "message_start":
         # 첫 번째 청크는 message role에 대한 정보를 포함
         role = chunk["message"]["role"]
-        text = None
+        text = ""
     elif chunk_type == "content_block_start":
         # 응답 텍스트 시작
         text = chunk["content_block"]["text"]
@@ -39,21 +50,9 @@ def chunk_handler(chunk):
     return text
 
 
-def done(err, res):
-    if err:
-        print(f"!!!!!!!!!!!!{err}")
-    return {
-        "statusCode": "400" if err else "200",
-        # 한글 깨짐을 방지하기 위해 ensure_ascii 옵션 추가
-        "body": json.dumps(res, ensure_ascii=False),
-        "headers": {"Content-Type": "application/json"},
-    }
-
-
-def get_streaming_response(prompt, streaming_callback):
+def get_streaming_response():
     try:
-        prompt = "대한민국의 수도에 대해 설명해"
-
+        prompt = st.session_state.messages[-1]["content"]
         body = json.dumps(
             {
                 "anthropic_version": "bedrock-2023-05-31",
@@ -70,6 +69,7 @@ def get_streaming_response(prompt, streaming_callback):
         # stream
         response = bedrock_runtime.invoke_model_with_response_stream(
             modelId="anthropic.claude-3-sonnet-20240229-v1:0",
+            # modelId="anthropic.claude-3-5-sonnet-20240620-v1:0",
             body=body,
         )
         stream = response.get("body")
@@ -79,9 +79,20 @@ def get_streaming_response(prompt, streaming_callback):
                 chunk = event.get("chunk")
                 if chunk:
                     chunk_json = json.loads(chunk.get("bytes").decode())
-                    done(None, streaming_callback(chunk_json))
+                    dstreaming_callback(chunk_json)
     except Exception as e:
-        done(e, "Error occured!")
+        print(e)
 
 
-get_streaming_response("대한민국의 수도에 대해 설명해", chunk_handler)
+# 사용자로부터 입력 받음
+if prompt := st.chat_input("Message Bedrock..."):
+    # 사용자 메시지 세션 상태에 추가
+    st.session_state.messages.append({"role": "user", "content": prompt})
+    with st.chat_message("user"):  # 사용자 메시지 채팅 메시지 버블 생성
+        st.markdown(prompt)  # 사용자 메시지 표시
+
+    with st.chat_message("assistant"):  # 보조 메시지 채팅 메시지 버블 생성
+        model_output = st.write_stream(get_streaming_response)
+
+    # 보조 응답 세션 상태에 추가
+    st.session_state.messages.append({"role": "assistant", "content": model_output})

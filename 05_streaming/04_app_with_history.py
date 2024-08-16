@@ -52,7 +52,6 @@ def chunk_handler(chunk):
 
 def get_streaming_response():
     try:
-        # prompt = st.session_state.messages[-1]["content"]
         history = []
         for msg in st.session_state.messages:
             history.append(

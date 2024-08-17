@@ -1,9 +1,20 @@
-import json
-
+import json  # JSON 파싱
 import boto3
+import streamlit as st
 
-# Bedrock runtime
 bedrock_runtime = boto3.client(service_name="bedrock-runtime", region_name="us-east-1")
+
+# 웹 앱 제목 설정
+st.title("Chatbot powered by Bedrock")
+
+# 세션 상태에 메시지 없으면 초기화
+if "messages" not in st.session_state:
+    st.session_state.messages = []
+
+# 세션 상태에 저장된 메시지 순회하며 표시
+for message in st.session_state.messages:
+    with st.chat_message(message["role"]):  # 채팅 메시지 버블 생성
+        st.markdown(message["content"])  # 메시지 내용 마크다운으로 렌더링
 
 
 def chunk_handler(chunk):
@@ -39,21 +50,26 @@ def chunk_handler(chunk):
     return text
 
 
-def get_streaming_response(prompt, streaming_callback):
+def get_streaming_response():
     try:
+        # prompt = st.session_state.messages[-1]["content"]
+        history = []
+        for msg in st.session_state.messages:
+            history.append(
+                {
+                    "role": msg["role"],
+                    "content": [{"type": "text", "text": msg["content"]}]
+                }
+            )
+            
         body = json.dumps(
             {
                 "anthropic_version": "bedrock-2023-05-31",
                 "max_tokens": 1000,
-                "messages": [
-                    {
-                        "role": "user",
-                        "content": [{"type": "text", "text": prompt}],
-                    }
-                ],
+                "messages": history,
             }
         )
-
+    
         # stream
         response = bedrock_runtime.invoke_model_with_response_stream(
             modelId="anthropic.claude-3-sonnet-20240229-v1:0",
@@ -67,9 +83,19 @@ def get_streaming_response(prompt, streaming_callback):
                 chunk = event.get("chunk")
                 if chunk:
                     chunk_json = json.loads(chunk.get("bytes").decode())
-                    streaming_callback(chunk_json)
+                    yield chunk_handler(chunk_json)
     except Exception as e:
         print(e)
 
+# 사용자로부터 입력 받음
+if prompt := st.chat_input("Message Bedrock..."):
+    # 사용자 메시지 세션 상태에 추가
+    st.session_state.messages.append({"role": "user", "content": prompt})
+    with st.chat_message("user"):  # 사용자 메시지 채팅 메시지 버블 생성
+        st.markdown(prompt)  # 사용자 메시지 표시
+    
+    with st.chat_message("assistant"):  # 보조 메시지 채팅 메시지 버블 생성
+        model_output = st.write_stream(get_streaming_response)
 
-get_streaming_response("대한민국의 수도에 대해 설명해", chunk_handler)
+    # 보조 응답 세션 상태에 추가
+    st.session_state.messages.append({"role": "assistant", "content": model_output})

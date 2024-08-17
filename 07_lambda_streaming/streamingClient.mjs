@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API_ENDPOINT = "YOUR LAMBDA FUNCTION";
-const body = { prompt: "대한민국의 수도에 대해 node설명해" };
+const body = { prompt: "대한민국의 수도에 대해 설명해" };
 
 async function postData() {
   try {

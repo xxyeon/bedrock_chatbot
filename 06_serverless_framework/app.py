@@ -1,5 +1,4 @@
 import json
-
 import boto3
 
 # Bedrock runtime
@@ -37,9 +36,6 @@ def lambda_handler(event, context):
         )
         print(f">>>>>>>>>>>> prompt: {prompt}")
 
-        # Anthropic의 Claude3 Sonnet 모델 사용
-        # 한국어를 비교적 잘 지원
-        # https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters-claude.html
         body = json.dumps(
             {
                 "anthropic_version": "bedrock-2023-05-31",
@@ -53,7 +49,6 @@ def lambda_handler(event, context):
             }
         )
 
-        # buffered
         response = bedrock_runtime.invoke_model(
             modelId="anthropic.claude-3-haiku-20240307-v1:0",
             body=body,

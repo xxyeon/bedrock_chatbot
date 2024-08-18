@@ -52,21 +52,15 @@ def chunk_handler(chunk):
 
 def get_streaming_response():
     try:
-        # prompt = st.session_state.messages[-1]["content"]
-        history = []
-        for msg in st.session_state.messages:
-            history.append(
-                {
-                    "role": msg["role"],
-                    "content": [{"type": "text", "text": msg["content"]}]
-                }
-            )
-            
+        prompt = st.session_state.messages[-1]["content"]
         body = json.dumps(
             {
                 "anthropic_version": "bedrock-2023-05-31",
                 "max_tokens": 1000,
-                "messages": history,
+                "messages": [{
+                    "role": "user",
+                    "content": [{"type": "text", "text": prompt}]
+                }],
             }
         )
     

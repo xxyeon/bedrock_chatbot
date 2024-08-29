@@ -18,6 +18,9 @@
 - EC2 + packages + Editor
 ### 2. Boto3 설치
 - Boto3: Python SDK for AWS
+  ```python
+  pip install boto3
+  ```
 - AWS credential 필요한데 cloud9 환겨와 함께 생성되는 EC2 인스턴스인 경우 이미 설치되어 있다.
 >bedrock 관련 기능이 있는 boto3 패키지를 사용하고 싶다면 boto3버전이 1.28.57인지 확인해봐야한다.
 >```console

@@ -41,6 +41,12 @@ pip install streamlit
 streamlit run {streamlit이 import된 python파일}
 ```
 
+### langchaing 설치
+```python
+ pip install langchain langchain-openai
+ pip install langchain langchain-aws langchain-community boto3
+```
+
 ## AWS Bedrock 실습
 ### 1. 사용하고 싶은 모델 지정
 ```python

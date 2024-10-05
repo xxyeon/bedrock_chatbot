@@ -1,3 +1,6 @@
+## 해커톤 출품 영상
+<p> https://www.youtube.com/watch?v=J5LEJtwotXY&t=1s </p>
+
 ## [Amazon Bedrock](https://docs.aws.amazon.com/ko_kr/bedrock/latest/userguide/what-is-bedrock.html)이란?
 ![image](https://github.com/user-attachments/assets/9e495768-ab05-462c-b01e-87091c34bbff)
 
